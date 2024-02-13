@@ -1,1 +1,2 @@
 # PeRuntimeCrypterX64
+Muito simples, pega o endereço da função MessageBoxA com getprocaddress, escreve o endereço na IAT do seu programa, Obs: Só foi testado compilado com VisualStudio e DevC++ montando seu programa com os código do C/C++. ele faz issso depois de injetado, ele importa a função com um shellcode que vai junto injetado. Depois de importar e salta pro entrypoint do seu programa, e executa a MessageBoxA do seu programa.
