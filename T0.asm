@@ -111,8 +111,7 @@ section .bss
 
 section .rdata
 	Ptrl                                         dq  0x0004000000000000
-	process dq "conhost.exe",0,0
-
+	
 section .data
     ctx istruc CONTEXT
     iend
