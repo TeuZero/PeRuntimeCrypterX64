@@ -1279,7 +1279,7 @@ decCode:
 		call r12
 		add rsp, 0x90
 		
-		call Exit
+	call Exit
 ret         
 
 PrintMsgConsole:
